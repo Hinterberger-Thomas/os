@@ -5,6 +5,15 @@ async fn hello() -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
 
+struct Info {
+    username: String,
+}
+
+async fn index(info: web::Json<Info>) -> impl Responder {
+    format!("Welcome {}!", info.username)
+}
+
+
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
@@ -21,6 +30,7 @@ async fn main() -> std::io::Result<()> {
             .service(hello)
             .service(echo)
             .route("/hey", web::get().to(manual_hello))
+            
     })
     .bind("127.0.0.1:8080")?
     .run()
