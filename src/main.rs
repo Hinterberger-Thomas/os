@@ -12,6 +12,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .route("/", web::get().to(greet))
             .route("/hey", web::get().to(current_temperature))
+            .route("/sev/{hey}", web::get().to(greeting))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
@@ -24,5 +25,15 @@ struct Measurement {
 }
 
 async fn current_temperature() -> impl Responder {
-    web::Json(Measurement { temperature: 42.3 })
+    ret_json()
+}
+
+fn ret_json()->web::Json<Measurement>{
+    let x = 0.0;
+    return web::Json(Measurement { temperature: x });
+}
+
+async fn greeting(req: HttpRequest) -> impl Responder {
+    let name = req.match_info().get("hey").unwrap_or("World");
+    format!("Hello {}!", &name)
 }
