@@ -41,5 +41,6 @@ async fn greeting(req: HttpRequest) -> impl Responder {
 }
 
 fn test_print(){
-    println!("test")
+    println!("test");
+    println!("testo");
 }
