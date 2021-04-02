@@ -8,6 +8,7 @@ async fn greet(req: HttpRequest) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    test_print();
     HttpServer::new(|| {
         App::new()
             .route("/", web::get().to(greet))
@@ -17,6 +18,7 @@ async fn main() -> std::io::Result<()> {
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
+    
 }
 
 #[derive(Serialize)]
@@ -36,4 +38,8 @@ fn ret_json()->web::Json<Measurement>{
 async fn greeting(req: HttpRequest) -> impl Responder {
     let name = req.match_info().get("hey").unwrap_or("World");
     format!("Hello {}!", &name)
+}
+
+fn test_print(){
+    println!("test")
 }
