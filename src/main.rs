@@ -1,47 +1,17 @@
-use actix_web::{web, App, HttpRequest, HttpServer, Responder};
-use serde::{*};
+#![no_std] // don't link the Rust standard library
+#![no_main] // disable all Rust-level entry points
 
-async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-    format!("Hello {}!", &name)
+use core::panic::PanicInfo;
+
+#[no_mangle] // don't mangle the name of this function
+pub extern "C" fn _start() -> ! {
+    // this function is the entry point, since the linker looks for a function
+    // named `_start` by default
+    loop {}
 }
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    test_print();
-    HttpServer::new(|| {
-        App::new()
-            .route("/", web::get().to(greet))
-            .route("/hey", web::get().to(current_temperature))
-            .route("/sev/{hey}", web::get().to(greeting))
-    })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
-    
-}
-
-#[derive(Serialize)]
-struct Measurement {
-    temperature: f32,
-}
-
-async fn current_temperature() -> impl Responder {
-    ret_json()
-}
-
-fn ret_json()->web::Json<Measurement>{
-    let x = 0.0;
-    return web::Json(Measurement { temperature: x });
-}
-
-async fn greeting(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("hey").unwrap_or("World");
-    format!("Hello {}!", &name)
-}
-
-fn test_print(){
-    println!("test");
-    println!("testo");
-    println!("testung")
+/// This function is called on panic.
+#[panic_handler]
+fn panic(_info: &PanicInfo) -> ! {
+    loop {}
 }
